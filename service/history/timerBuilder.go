@@ -223,9 +223,11 @@ func (tb *timerBuilder) GetUserTimer(timerID string) (bool, *persistence.TimerIn
 
 // IsTimerExpired - Whether a timer is expired w.r.t reference time.
 func (tb *timerBuilder) IsTimerExpired(td *timerDetails, referenceTime time.Time) bool {
-	// Cql timestamp is in milli sec resolution, here we do the check in terms of second resolution.
-	expiry := td.TimerSequenceID.VisibilityTimestamp.Unix()
-	return expiry <= referenceTime.Unix()
+	if tb.timeSource.MaybeBefore(td.TimerSequenceID.VisibilityTimestamp, referenceTime) {
+		time.Sleep(referenceTime.Sub(td.TimerSequenceID.VisibilityTimestamp))
+		return true
+	}
+	return false
 }
 
 func (tb *timerBuilder) GetActivityTimers(msBuilder mutableState) timers {

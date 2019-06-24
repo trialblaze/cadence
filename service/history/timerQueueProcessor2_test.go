@@ -55,6 +55,7 @@ type (
 		config           *Config
 		logger           log.Logger
 
+		mockTimeSource      *clock.EventTimeSource
 		mockHistoryEngine   *historyEngineImpl
 		mockMatchingClient  *mocks.MatchingClient
 		mockMetadataMgr     *mocks.MetadataManager
@@ -86,6 +87,8 @@ func (s *timerQueueProcessor2Suite) SetupSuite() {
 
 func (s *timerQueueProcessor2Suite) SetupTest() {
 	shardID := 0
+	s.mockTimeSource = clock.NewEventTimeSource()
+	s.mockTimeSource.Update(time.Now())
 	s.mockMatchingClient = &mocks.MatchingClient{}
 	s.mockExecutionMgr = &mocks.ExecutionManager{}
 	s.mockShardManager = &mocks.ShardManager{}
@@ -197,7 +200,7 @@ func (s *timerQueueProcessor2Suite) TestTimerUpdateTimesOut() {
 
 	waitCh := make(chan struct{})
 
-	mockTS := &mockTimeSource{currTime: time.Now()}
+	mockTS := s.mockTimeSource
 
 	taskID := int64(100)
 	timerTask := &persistence.TimerTaskInfo{
@@ -271,7 +274,7 @@ func (s *timerQueueProcessor2Suite) TestWorkflowTimeout() {
 
 	waitCh := make(chan struct{})
 
-	mockTS := &mockTimeSource{currTime: time.Now()}
+	mockTS := s.mockTimeSource
 
 	taskID := int64(100)
 	timerTask := &persistence.TimerTaskInfo{
@@ -348,7 +351,7 @@ func (s *timerQueueProcessor2Suite) TestWorkflowTimeout_Cron() {
 
 	waitCh := make(chan struct{})
 
-	mockTS := &mockTimeSource{currTime: time.Now()}
+	mockTS := s.mockTimeSource
 
 	taskID := int64(100)
 	timerTask := &persistence.TimerTaskInfo{

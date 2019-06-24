@@ -165,7 +165,7 @@ func (s *stateBuilderSuite) applyWorkflowExecutionStartedEventTest(cronSchedule 
 		CronSchedule:    cronSchedule,
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionStarted
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -239,7 +239,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionTimedOut()
 	}
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionTimedOut
 	event := &shared.HistoryEvent{
 		Version:                                  common.Int64Ptr(version),
@@ -291,7 +291,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionTerminated
 	}
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionTerminated
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -341,7 +341,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionSignaled()
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionSignaled
 	event := &shared.HistoryEvent{
 		Version:                                  common.Int64Ptr(version),
@@ -375,7 +375,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionFailed() {
 	}
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionFailed
 	event := &shared.HistoryEvent{
 		Version:                                common.Int64Ptr(version),
@@ -432,7 +432,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionContinuedA
 	parentInitiatedEventID := int64(144)
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	tasklist := "some random tasklist"
 	workflowType := "some random workflow type"
 	workflowTimeoutSecond := int32(110)
@@ -615,7 +615,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionCompleted(
 	}
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionCompleted
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -667,7 +667,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionCanceled()
 	}
 	retentionDays := int32(1)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionCanceled
 	event := &shared.HistoryEvent{
 		Version:                                  common.Int64Ptr(version),
@@ -716,7 +716,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionCancelRequ
 		WorkflowId: common.StringPtr("some random workflow ID"),
 		RunId:      common.StringPtr(validRunID),
 	}
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeWorkflowExecutionCancelRequested
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -767,7 +767,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeWorkflowExecutionContinuedA
 
 	stateBuilder := newStateBuilder(s.mockShard, msBuilder, s.logger)
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	tasklist := "some random tasklist"
 	workflowType := "some random workflow type"
 	workflowTimeoutSecond := int32(110)
@@ -952,7 +952,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeTimerStarted() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	timerID := "timer ID"
 	timeoutSecond := int64(10)
 	evenType := shared.EventTypeTimerStarted
@@ -1002,7 +1002,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeTimerFired() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeTimerFired
 	event := &shared.HistoryEvent{
 		Version:                   common.Int64Ptr(version),
@@ -1049,7 +1049,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeTimerCanceled() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 
 	// this is a timer which already got created and will be used to generate a new concrete timer
 	timerID := "timer ID"
@@ -1102,7 +1102,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeStartChildWorkflowExecution
 	targetWorkflowID := "some random target workflow ID"
 	targetDomain := "some random target domain name"
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	createRequestID := uuid.New()
 	evenType := shared.EventTypeStartChildWorkflowExecutionInitiated
 	event := &shared.HistoryEvent{
@@ -1168,7 +1168,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeStartChildWorkflowExecution
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeStartChildWorkflowExecutionFailed
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1205,7 +1205,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeSignalExternalWorkflowExecu
 	childWorkflowOnly := true
 	targetDomain := "some random target domain name"
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	signalRequestID := uuid.New()
 	signalName := "some random signal name"
 	signalInput := []byte("some random signal input")
@@ -1281,7 +1281,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeSignalExternalWorkflowExecu
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeSignalExternalWorkflowExecutionFailed
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1318,7 +1318,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeRequestCancelExternalWorkfl
 	childWorkflowOnly := true
 	targetDomain := "some random target domain name"
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	cancellationRequestID := uuid.New()
 	control := []byte("some random control")
 	evenType := shared.EventTypeRequestCancelExternalWorkflowExecutionInitiated
@@ -1388,7 +1388,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeRequestCancelExternalWorkfl
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeRequestCancelExternalWorkflowExecutionFailed
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1420,7 +1420,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeRequestCancelActivityTaskFa
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeRequestCancelActivityTaskFailed
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1451,7 +1451,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeMarkerRecorded() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeMarkerRecorded
 	event := &shared.HistoryEvent{
 		Version:                       common.Int64Ptr(version),
@@ -1482,7 +1482,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeExternalWorkflowExecutionSi
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeExternalWorkflowExecutionSignaled
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1514,7 +1514,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeExternalWorkflowExecutionCa
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeExternalWorkflowExecutionCancelRequested
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1546,7 +1546,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeDecisionTaskTimedOut() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	scheduleID := int64(12)
 	startedID := int64(28)
 	evenType := shared.EventTypeDecisionTaskTimedOut
@@ -1599,7 +1599,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeDecisionTaskStarted() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	tasklist := "some random tasklist"
 	timeoutSecond := int32(11)
 	scheduleID := int64(111)
@@ -1654,7 +1654,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeDecisionTaskScheduled() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	tasklist := "some random tasklist"
 	timeoutSecond := int32(11)
 	evenType := shared.EventTypeDecisionTaskScheduled
@@ -1713,7 +1713,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeDecisionTaskFailed() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	scheduleID := int64(12)
 	startedID := int64(28)
 	evenType := shared.EventTypeDecisionTaskFailed
@@ -1765,7 +1765,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeDecisionTaskCompleted() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	scheduleID := int64(12)
 	startedID := int64(28)
 	evenType := shared.EventTypeDecisionTaskCompleted
@@ -1802,7 +1802,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionTimed
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionTimedOut
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1834,7 +1834,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionTermi
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionTerminated
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1866,7 +1866,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionStart
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionStarted
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1898,7 +1898,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionFaile
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionFailed
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1930,7 +1930,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionCompl
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionCompleted
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1962,7 +1962,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeChildWorkflowExecutionCance
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeChildWorkflowExecutionCanceled
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
@@ -1994,7 +1994,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeCancelTimerFailed() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeCancelTimerFailed
 	event := &shared.HistoryEvent{
 		Version:                          common.Int64Ptr(version),
@@ -2025,7 +2025,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskTimedOut() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeActivityTaskTimedOut
 	event := &shared.HistoryEvent{
 		Version:                             common.Int64Ptr(version),
@@ -2085,7 +2085,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskStarted() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	activityID := "activity ID"
 	tasklist := "some random tasklist"
 	timeoutSecond := int32(10)
@@ -2158,7 +2158,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskScheduled() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	activityID := "activity ID"
 	tasklist := "some random tasklist"
 	timeoutSecond := int32(10)
@@ -2226,7 +2226,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskFailed() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeActivityTaskFailed
 	event := &shared.HistoryEvent{
 		Version:                           common.Int64Ptr(version),
@@ -2286,7 +2286,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskCompleted() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeActivityTaskCompleted
 	event := &shared.HistoryEvent{
 		Version:                              common.Int64Ptr(version),
@@ -2346,7 +2346,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskCanceled() {
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeActivityTaskCanceled
 	event := &shared.HistoryEvent{
 		Version:                             common.Int64Ptr(version),
@@ -2406,7 +2406,7 @@ func (s *stateBuilderSuite) TestApplyEvents_EventTypeActivityTaskCancelRequested
 		RunId:      common.StringPtr(validRunID),
 	}
 
-	now := time.Now()
+	now := s.mockShard.timeSource.Now()
 	evenType := shared.EventTypeActivityTaskCancelRequested
 	event := &shared.HistoryEvent{
 		Version:   common.Int64Ptr(version),
