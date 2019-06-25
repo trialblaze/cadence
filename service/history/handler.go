@@ -1259,6 +1259,11 @@ func (h *Handler) convertError(err error) error {
 }
 
 func (h *Handler) updateErrorMetric(scope int, domainID, workflowID string, err error) {
+	if err == context.DeadlineExceeded || err == context.Canceled {
+		h.metricsClient.IncCounter(scope, metrics.CadenceErrContextTimeoutCounter)
+		return
+	}
+
 	switch err := err.(type) {
 	case *hist.ShardOwnershipLostError:
 		h.metricsClient.IncCounter(scope, metrics.CadenceErrShardOwnershipLostCounter)

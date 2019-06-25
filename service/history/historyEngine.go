@@ -430,14 +430,6 @@ func (e *historyEngineImpl) StartWorkflowExecution(ctx ctx.Context, startRequest
 		replicationTasks = append(replicationTasks, replicationTask)
 	}
 
-	// delete history if createWorkflow failed, otherwise history will leak
-	shouldDeleteHistory := true
-	defer func() {
-		if shouldDeleteHistory {
-			e.deleteEvents(domainID, execution, eventStoreVersion, msBuilder.GetCurrentBranch())
-		}
-	}()
-
 	// create as brand new
 	createMode := persistence.CreateWorkflowModeBrandNew
 	prevRunID := ""
@@ -483,7 +475,6 @@ func (e *historyEngineImpl) StartWorkflowExecution(ctx ctx.Context, startRequest
 	}
 
 	if retError == nil || persistence.IsTimeoutError(retError) {
-		shouldDeleteHistory = false
 		e.timerProcessor.NotifyNewTimers(e.currentClusterName, e.shard.GetCurrentTime(e.currentClusterName), timerTasks)
 		return &workflow.StartWorkflowExecutionResponse{
 			RunId: execution.RunId,
@@ -2343,14 +2334,6 @@ func (e *historyEngineImpl) SignalWithStartWorkflowExecution(ctx ctx.Context, si
 		replicationTasks = append(replicationTasks, replicationTask)
 	}
 
-	// delete history if createWorkflow failed, otherwise history will leak
-	shouldDeleteHistory := true
-	defer func() {
-		if shouldDeleteHistory {
-			e.deleteEvents(domainID, execution, eventStoreVersion, msBuilder.GetCurrentBranch())
-		}
-	}()
-
 	createMode := persistence.CreateWorkflowModeBrandNew
 	prevRunID := ""
 	prevLastWriteVersion := int64(0)
@@ -2377,7 +2360,6 @@ func (e *historyEngineImpl) SignalWithStartWorkflowExecution(ctx ctx.Context, si
 
 	// Timeout error is not a failure
 	if retError == nil || persistence.IsTimeoutError(retError) {
-		shouldDeleteHistory = false
 		e.timerProcessor.NotifyNewTimers(e.currentClusterName, e.shard.GetCurrentTime(e.currentClusterName), timerTasks)
 		return &workflow.StartWorkflowExecutionResponse{
 			RunId: execution.RunId,

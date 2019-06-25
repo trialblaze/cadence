@@ -1067,7 +1067,6 @@ func (s *engine2Suite) TestStartWorkflowExecution_StillRunning_Dedup() {
 		CloseStatus:      p.WorkflowCloseStatusNone,
 		LastWriteVersion: lastWriteVersion,
 	}).Once()
-	s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 	s.mockMetadataMgr.On("GetDomain", mock.Anything).Return(
 		&p.GetDomainResponse{
 			Info:   &p.DomainInfo{ID: domainID},
@@ -1118,7 +1117,6 @@ func (s *engine2Suite) TestStartWorkflowExecution_StillRunning_NonDeDup() {
 		CloseStatus:      p.WorkflowCloseStatusNone,
 		LastWriteVersion: lastWriteVersion,
 	}).Once()
-	s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 	s.mockMetadataMgr.On("GetDomain", mock.Anything).Return(
 		&p.GetDomainResponse{
 			Info:   &p.DomainInfo{ID: domainID},
@@ -1254,8 +1252,6 @@ func (s *engine2Suite) TestStartWorkflowExecution_NotRunning_PrevSuccess() {
 						request.PreviousLastWriteVersion == lastWriteVersion
 				}),
 			).Return(&p.CreateWorkflowExecutionResponse{}, nil).Once()
-		} else {
-			s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 		}
 
 		resp, err := s.historyEngine.StartWorkflowExecution(context.Background(), &h.StartWorkflowExecutionRequest{
@@ -1351,8 +1347,6 @@ func (s *engine2Suite) TestStartWorkflowExecution_NotRunning_PrevFail() {
 							request.PreviousLastWriteVersion == lastWriteVersion
 					}),
 				).Return(&p.CreateWorkflowExecutionResponse{}, nil).Once()
-			} else {
-				s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 			}
 
 			resp, err := s.historyEngine.StartWorkflowExecution(context.Background(), &h.StartWorkflowExecutionRequest{
@@ -1652,7 +1646,6 @@ func (s *engine2Suite) TestSignalWithStartWorkflowExecution_Start_DuplicateReque
 	s.mockExecutionMgr.On("GetWorkflowExecution", mock.Anything).Return(gwmsResponse, nil).Once()
 	s.mockHistoryV2Mgr.On("AppendHistoryNodes", mock.Anything).Return(&p.AppendHistoryNodesResponse{Size: 0}, nil).Once()
 	s.mockExecutionMgr.On("CreateWorkflowExecution", mock.Anything).Return(nil, workflowAlreadyStartedErr).Once()
-	s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 	s.mockMetadataMgr.On("GetDomain", mock.Anything).Return(
 		&p.GetDomainResponse{
 			Info:   &p.DomainInfo{ID: domainID},
@@ -1719,7 +1712,6 @@ func (s *engine2Suite) TestSignalWithStartWorkflowExecution_Start_WorkflowAlread
 	s.mockExecutionMgr.On("GetWorkflowExecution", mock.Anything).Return(gwmsResponse, nil).Once()
 	s.mockHistoryV2Mgr.On("AppendHistoryNodes", mock.Anything).Return(&p.AppendHistoryNodesResponse{Size: 0}, nil).Once()
 	s.mockExecutionMgr.On("CreateWorkflowExecution", mock.Anything).Return(nil, workflowAlreadyStartedErr).Once()
-	s.mockHistoryV2Mgr.On("DeleteHistoryBranch", mock.Anything).Return(nil).Once()
 	s.mockMetadataMgr.On("GetDomain", mock.Anything).Return(
 		&p.GetDomainResponse{
 			Info:   &p.DomainInfo{ID: domainID},
