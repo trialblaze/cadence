@@ -660,7 +660,7 @@ func (v *esVisibilityStore) getFieldType(fieldName string) workflow.IndexedValue
 	if !ok {
 		v.logger.Error("Unknown fieldName, validation should be done in frontend already", tag.Value(fieldName))
 	}
-	return common.ConvertIndexedValueTypeToThriftType(fieldType, v.logger)
+	return fieldType.(workflow.IndexedValueType)
 }
 
 func shouldSearchAfter(token *esVisibilityPageToken) bool {
