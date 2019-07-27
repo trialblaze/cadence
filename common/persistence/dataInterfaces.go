@@ -790,21 +790,27 @@ type (
 
 		Mode ConflictResolveWorkflowMode
 
-		// previous workflow information
-		PrevRunID            string
-		PrevLastWriteVersion int64
-		PrevState            int
+		// TODO deprecate this once nDC migration is completed
+		//  basically should use CurrentWorkflowMutation instead
+		WorkflowCAS *WorkflowCAS
 
 		// workflow to be resetted
 		ResetWorkflowSnapshot WorkflowSnapshot
 
-		// current workflow
-		CurrentWorkflowMutation *WorkflowMutation
-
 		// maybe new workflow
 		NewWorkflowSnapshot *WorkflowSnapshot
 
+		// current workflow
+		CurrentWorkflowMutation *WorkflowMutation
+
 		Encoding common.EncodingType // optional binary encoding type
+	}
+
+	// TODO deprecate this once nDC migration is completed
+	WorkflowCAS struct {
+		PrevRunID            string
+		PrevLastWriteVersion int64
+		PrevState            int
 	}
 
 	// ResetWorkflowExecutionRequest is used to reset workflow execution state for current run and create new run

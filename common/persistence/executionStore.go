@@ -521,9 +521,9 @@ func (m *executionManagerImpl) ConflictResolveWorkflowExecution(
 
 		Mode: request.Mode,
 
-		PrevRunID:            request.PrevRunID,
-		PrevLastWriteVersion: request.PrevLastWriteVersion,
-		PrevState:            request.PrevState,
+		// TODO deprecate this once nDC migration is completed
+		//  basically should use CurrentWorkflowMutation instead
+		WorkflowCAS: request.WorkflowCAS,
 
 		ResetWorkflowSnapshot: *serializedResetWorkflowSnapshot,
 

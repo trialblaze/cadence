@@ -26,7 +26,6 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"runtime/debug"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -3812,14 +3811,6 @@ func (s *ExecutionManagerSuite) TestConflictResolveWorkflowExecutionCurrentIsNot
 
 // TestConflictResolveWorkflowExecutionWithTransactionCurrentIsNotSelf test
 func (s *ExecutionManagerSuite) TestConflictResolveWorkflowExecutionWithTransactionCurrentIsNotSelf() {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("########")
-			fmt.Println(string(debug.Stack()))
-			fmt.Println("########")
-		}
-	}()
-
 	domainID := "4ca1faac-1a3a-47af-8e51-fdaa2b3d45b9"
 	workflowID := "test-reset-mutable-state-test-with-transaction-current-is-not-self"
 
@@ -3898,10 +3889,12 @@ func (s *ExecutionManagerSuite) TestConflictResolveWorkflowExecutionWithTransact
 	}
 
 	resetReq := &p.ConflictResolveWorkflowExecutionRequest{
-		RangeID:              s.ShardInfo.RangeID,
-		PrevRunID:            state.ExecutionInfo.RunID,
-		PrevLastWriteVersion: state.ReplicationState.LastWriteVersion,
-		PrevState:            state.ExecutionInfo.State,
+		RangeID: s.ShardInfo.RangeID,
+		WorkflowCAS: &p.WorkflowCAS{
+			PrevRunID:            state.ExecutionInfo.RunID,
+			PrevLastWriteVersion: state.ReplicationState.LastWriteVersion,
+			PrevState:            state.ExecutionInfo.State,
+		},
 		ResetWorkflowSnapshot: p.WorkflowSnapshot{
 			ExecutionInfo:    resetExecutionInfo,
 			ExecutionStats:   &p.ExecutionStats{},
@@ -3917,6 +3910,7 @@ func (s *ExecutionManagerSuite) TestConflictResolveWorkflowExecutionWithTransact
 		},
 		CurrentWorkflowMutation: &p.WorkflowMutation{
 			ExecutionInfo:    currentInfo,
+			ExecutionStats:   &p.ExecutionStats{},
 			ReplicationState: currentState,
 			Condition:        int64(3),
 
@@ -4048,10 +4042,12 @@ func (s *ExecutionManagerSuite) TestConflictResolveWorkflowExecutionWithTransact
 	}
 
 	resetReq := &p.ConflictResolveWorkflowExecutionRequest{
-		RangeID:              s.ShardInfo.RangeID,
-		PrevRunID:            state.ExecutionInfo.RunID,
-		PrevLastWriteVersion: state.ReplicationState.LastWriteVersion,
-		PrevState:            state.ExecutionInfo.State,
+		RangeID: s.ShardInfo.RangeID,
+		WorkflowCAS: &p.WorkflowCAS{
+			PrevRunID:            state.ExecutionInfo.RunID,
+			PrevLastWriteVersion: state.ReplicationState.LastWriteVersion,
+			PrevState:            state.ExecutionInfo.State,
+		},
 		ResetWorkflowSnapshot: p.WorkflowSnapshot{
 			ExecutionInfo:  resetExecutionInfo,
 			ExecutionStats: &p.ExecutionStats{},

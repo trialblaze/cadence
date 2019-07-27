@@ -310,19 +310,18 @@ type (
 
 		Mode ConflictResolveWorkflowMode
 
-		// previous workflow information
-		PrevRunID            string
-		PrevLastWriteVersion int64
-		PrevState            int
+		// TODO deprecate this once nDC migration is completed
+		//  basically should use CurrentWorkflowMutation instead
+		WorkflowCAS *WorkflowCAS
 
 		// workflow to be resetted
 		ResetWorkflowSnapshot InternalWorkflowSnapshot
 
-		// current workflow
-		CurrentWorkflowMutation *InternalWorkflowMutation
-
 		// maybe new workflow
 		NewWorkflowSnapshot *InternalWorkflowSnapshot
+
+		// current workflow
+		CurrentWorkflowMutation *InternalWorkflowMutation
 	}
 
 	// InternalResetWorkflowExecutionRequest is used to reset workflow execution state for Persistence Interface
